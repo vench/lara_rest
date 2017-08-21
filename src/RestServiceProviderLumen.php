@@ -12,6 +12,8 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application;
 use LpRest\Repositories\CommonRepositoryModelProvider;
 use LpRest\Repositories\CommonRepositoryModelProviderBase;
+use LpRest\Repositories\CommonRepositoryAccessProvider;
+use LpRest\Repositories\CommonRepositoryAccessProviderBase;
 
 
 class RestServiceProviderLumen extends ServiceProvider
@@ -33,7 +35,12 @@ class RestServiceProviderLumen extends ServiceProvider
     {
 
         $this->app->singleton(CommonRepositoryModelProvider::class, CommonRepositoryModelProviderBase::class);
+        $this->app->singleton(CommonRepositoryAccessProvider::class, CommonRepositoryAccessProviderBase::class);
+    }
 
+
+    public function setRouteGroupOptions($optionGroup) {
+        var_dump($optionGroup); exit();
     }
 
 

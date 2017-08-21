@@ -3,6 +3,7 @@
 namespace LpRest\Controllers;
 
 use LpRest\Repositories\CommonRepository;
+use LpRest\Repositories\CommonRepositoryAccessProvider;
 use LpRest\Repositories\Repository;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -17,8 +18,14 @@ class CommonController extends Controller
 {
 
 
-    function __construct()
+    /**
+     * @var CommonRepositoryAccessProvider
+     */
+    private $accessProvider;
+
+    public function __construct(CommonRepositoryAccessProvider $accessProvider)
     {
+        $this->accessProvider = $accessProvider;
     }
 
 
@@ -256,15 +263,13 @@ class CommonController extends Controller
             substr($method, $pos + 2) : $method;
 
         $action = $r->getAccessPermissionName($methodShort);
-        $user = \Auth::user();
-        foreach ($user->getPermissions() as $permission) {
-            if($permission->action === $action && $permission->pivot->value == 1) {
-                return null;
-            }
+
+        if(!is_null( $this->accessProvider) && $this->accessProvider->checkAccess($action)) {
+            return null;
         }
 
         return $this->responseResult([ ], false, [
-            ['Недостаточно прав']
+            ['Insufficient rights']
         ], 403);
     }
 

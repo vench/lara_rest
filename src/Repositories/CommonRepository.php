@@ -46,7 +46,7 @@ class CommonRepository implements Repository
      * CommonRepository constructor.
      * @param CommonRepositoryModelProvider $commonRepositoryModelProvider
      */
-    private function __construct(CommonRepositoryModelProvider $commonRepositoryModelProvider)  {
+    public function __construct(CommonRepositoryModelProvider $commonRepositoryModelProvider)  {
         $this->commonRepositoryModelProvider = $commonRepositoryModelProvider;
     }
 
