@@ -22,7 +22,11 @@ class RestServiceProviderLumen extends ServiceProvider
 
     public function boot()
     {
+
+        $restServiceHelper = $this->app->make(RestServiceHelper::class);
+
         $this->registerRoute();
+
 
     }
 
@@ -34,14 +38,16 @@ class RestServiceProviderLumen extends ServiceProvider
     public function register()
     {
 
-        $this->app->singleton(CommonRepositoryModelProvider::class, CommonRepositoryModelProviderBase::class);
-        $this->app->singleton(CommonRepositoryAccessProvider::class, CommonRepositoryAccessProviderBase::class);
+
+
+
+
+        $this->app->bindIf(CommonRepositoryModelProvider::class, CommonRepositoryModelProviderBase::class, true);
+        $this->app->bindIf(CommonRepositoryAccessProvider::class, CommonRepositoryAccessProviderBase::class, true);
     }
 
 
-    public function setRouteGroupOptions($optionGroup) {
-        var_dump($optionGroup); exit();
-    }
+
 
 
     /**
