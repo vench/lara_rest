@@ -59,9 +59,9 @@ class RestServiceProviderLumen extends ServiceProvider
         /* @var $app \Laravel\Lumen\Application */
         $app = $this->app;
 
-        $optionGroup = array_merge($this->restServiceHelper->getRouteGroupOptions(), [
+        $optionGroup = array_merge([
             'prefix'    => 'rest',
-        ]);
+        ], $this->restServiceHelper->getRouteGroupOptions() );
 
         $app->group($optionGroup, function(Application $router){
 
