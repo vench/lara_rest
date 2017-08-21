@@ -23,9 +23,15 @@ class CommonController extends Controller
      */
     private $accessProvider;
 
-    public function __construct(CommonRepositoryAccessProvider $accessProvider)
+    /**
+     * @var CommonResponse
+     */
+    private $commonResponse;
+
+    public function __construct(CommonRepositoryAccessProvider $accessProvider, CommonResponse $commonResponse)
     {
         $this->accessProvider = $accessProvider;
+        $this->commonResponse = $commonResponse;
     }
 
 
@@ -280,15 +286,9 @@ class CommonController extends Controller
      * @param array $errors
      * @param int $status
      * @return \Illuminate\Http\JsonResponse
-     * @todo  в будущем возможен иной формат сериализации
      */
     private function responseResult($body, $success = true, $errors = [], $status = 200) {
-        return response()->json([
-            'success'   => $success,
-            'code'      => $status,
-            'body'      => $body,
-            'errors'    => $errors,
-        ], $status);
+        return $this->commonResponse->responseResult($body, $success, $errors, $status);
     }
 
     /**

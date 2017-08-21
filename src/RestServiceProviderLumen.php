@@ -14,6 +14,8 @@ use LpRest\Repositories\CommonRepositoryModelProvider;
 use LpRest\Repositories\CommonRepositoryModelProviderBase;
 use LpRest\Repositories\CommonRepositoryAccessProvider;
 use LpRest\Repositories\CommonRepositoryAccessProviderBase;
+use LpRest\Controllers\CommonResponse;
+use LpRest\Controllers\CommonResponseBase;
 
 
 class RestServiceProviderLumen extends ServiceProvider
@@ -46,6 +48,9 @@ class RestServiceProviderLumen extends ServiceProvider
 
         $this->app->bindIf(CommonRepositoryAccessProvider::class,
             CommonRepositoryAccessProviderBase::class, true);
+
+        $this->app->bindIf(CommonResponse::class,
+            CommonResponseBase::class, true);
     }
 
 
