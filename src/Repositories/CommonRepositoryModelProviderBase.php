@@ -34,8 +34,8 @@ class CommonRepositoryModelProviderBase implements CommonRepositoryModelProvider
     public function getModelByName(string $modelName):CommonRepositoryModel {
         $modelNameLower = strtolower($modelName);
 
-        if (!empty(self::$listModels[$modelNameLower])) {
-            $reflectionName = self::$listModels[$modelNameLower];
+        if (!empty(self::$listModelAliases[$modelNameLower])) {
+            $reflectionName = self::$listModelAliases[$modelNameLower];
         } else {
             $reflectionName = '\App\Models\\' . ucfirst($modelName);
         }
@@ -46,7 +46,7 @@ class CommonRepositoryModelProviderBase implements CommonRepositoryModelProvider
 
         $ref = new \ReflectionClass($reflectionName);
 
-        if(!$ref->implementsInterface('App\Rest\Repositories\CommonRepositoryModel')) {
+        if(!$ref->implementsInterface(CommonRepositoryModel::class)) {
             throw new \Exception("Class {$modelName} not implements App\Rest\Repositories\CommonRepositoryModel");
         }
 
