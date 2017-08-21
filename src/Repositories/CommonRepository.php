@@ -13,13 +13,7 @@ use Illuminate\Contracts\Validation\Factory;
 
 class CommonRepository implements Repository
 {
-    /**
-     * @var array
-     */
-    private static $listModelAliases = [
 
-        //TODO
-    ];
 
 
     /**
@@ -42,8 +36,32 @@ class CommonRepository implements Repository
      */
     private $accessPermissionNames = [];
 
+    /**
+     * @var CommonRepositoryModelProvider
+     */
+    private $commonRepositoryModelProvider;
 
-    private function __construct()  {  }
+
+    /**
+     * CommonRepository constructor.
+     * @param CommonRepositoryModelProvider $commonRepositoryModelProvider
+     */
+    private function __construct(CommonRepositoryModelProvider $commonRepositoryModelProvider)  {
+        $this->commonRepositoryModelProvider = $commonRepositoryModelProvider;
+    }
+
+
+    /**
+     * @param $modelName
+     */
+    public function setModelName($modelName) {
+        $model = $this->commonRepositoryModelProvider->getModelByName($modelName);
+
+        $this->queryBuilder = $model->getRestQuery();
+        $this->rules = $model->getRestRules();
+        $this->customAttributes = $model->getRestCustomAttributeNames();
+        $this->accessPermissionNames = $model->getRestAccessPermissionAliases();
+    }
 
 
     /**
@@ -227,37 +245,11 @@ class CommonRepository implements Repository
      */
     public static function createByModelName($modelName)
     {
-        $reflectionName = self::getModelNameByAlias($modelName);
-
-        if (empty($reflectionName)) {
-            $reflectionName = '\App\Models\\' . ucfirst($modelName);
-            if (!class_exists($reflectionName)) {
-                throw new \Exception("Class {$modelName} not found");
-            }
-        }
-
-        $ref = new \ReflectionClass($reflectionName);
-
-        if(!$ref->implementsInterface('App\Rest\Repositories\CommonRepositoryModel')) {
-            throw new \Exception("Class {$modelName} not implements App\Rest\Repositories\CommonRepositoryModel");
-        }
-
-        $instance = new CommonRepository();
-        $instance->queryBuilder = call_user_func_array([$ref->getName(), 'query'], []);
-        $instance->rules = call_user_func_array([$ref->getName(), 'rules'], []);
-        $instance->customAttributes = call_user_func_array([$ref->getName(), 'getCustomAttributeNames'], []);
-        $instance->accessPermissionNames = call_user_func_array([$ref->getName(), 'getAccessPermissionAliases'], []);
+        $instance = app()->make(CommonRepository::class, []);
+        $instance->setModelName( $modelName);
 
         return $instance;
     }
 
 
-    /**
-     * @param string $alias
-     * @return string
-     */
-    private static function getModelNameByAlias($alias) {
-        $aliasLower = strtolower($alias);
-        return self::$listModelAliases[$aliasLower] ?? null;
-    }
 }

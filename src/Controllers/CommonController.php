@@ -15,6 +15,13 @@ use Illuminate\Http\Request;
  */
 class CommonController extends Controller
 {
+
+
+    function __construct()
+    {
+    }
+
+
     /**
      * @param string $modelName
      * @param Request $request

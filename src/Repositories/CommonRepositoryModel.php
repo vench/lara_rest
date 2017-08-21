@@ -8,7 +8,10 @@
 
 namespace LpRest\Repositories;
 
-
+/**
+ * Interface CommonRepositoryModel
+ * @package LpRest\Repositories
+ */
 interface CommonRepositoryModel
 {
 
@@ -16,20 +19,20 @@ interface CommonRepositoryModel
      * @param array $merge
      * @return array
      */
-    public static function rules($merge = []);
+    public function getRestRules($merge = []);
 
     /**
      * @return array
      */
-    public static function getCustomAttributeNames();
+    public function getRestCustomAttributeNames();
 
     /**
      * @return array
      */
-    public static function getAccessPermissionAliases();
+    public function getRestAccessPermissionAliases();
 
     /**
      * @return \Illuminate\Database\Query\Builder
      */
-    public static function query();
+    public function getRestQuery();
 }
