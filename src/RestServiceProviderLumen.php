@@ -19,14 +19,17 @@ use LpRest\Repositories\CommonRepositoryAccessProviderBase;
 class RestServiceProviderLumen extends ServiceProvider
 {
 
+    /**
+     * @var RestServiceHelper
+     */
+    private $restServiceHelper;
 
     public function boot()
     {
 
-        $restServiceHelper = $this->app->make(RestServiceHelper::class);
+        $this->restServiceHelper = $this->app->make(RestServiceHelper::class);
 
         $this->registerRoute();
-
 
     }
 
@@ -38,12 +41,11 @@ class RestServiceProviderLumen extends ServiceProvider
     public function register()
     {
 
+        $this->app->bindIf(CommonRepositoryModelProvider::class,
+            CommonRepositoryModelProviderBase::class, true);
 
-
-
-
-        $this->app->bindIf(CommonRepositoryModelProvider::class, CommonRepositoryModelProviderBase::class, true);
-        $this->app->bindIf(CommonRepositoryAccessProvider::class, CommonRepositoryAccessProviderBase::class, true);
+        $this->app->bindIf(CommonRepositoryAccessProvider::class,
+            CommonRepositoryAccessProviderBase::class, true);
     }
 
 
@@ -57,39 +59,41 @@ class RestServiceProviderLumen extends ServiceProvider
         /* @var $app \Laravel\Lumen\Application */
         $app = $this->app;
 
-        $optionGroup = [];
+        $optionGroup = array_merge($this->restServiceHelper->getRouteGroupOptions(), [
+            'prefix'    => 'rest',
+        ]);
 
         $app->group($optionGroup, function(Application $router){
 
             //all
-            $router->get('rest/{modelName:[A-Za-z][A-Za-z0-9]+}',
+            $router->get('{modelName:[A-Za-z][A-Za-z0-9]+}',
                 '\LpRest\Controllers\CommonController@all');
-            $router->get('rest/{modelName:[A-Za-z][A-Za-z0-9]+}/{relations:[A-Za-z][A-Za-z0-9\/]+}',
+            $router->get('{modelName:[A-Za-z][A-Za-z0-9]+}/{relations:[A-Za-z][A-Za-z0-9\/]+}',
                 '\LpRest\Controllers\CommonController@all');
 
             //multi
-            $router->post('rest/multi', '\LpRest\Controllers\CommonController@multi');
+            $router->post('multi', '\LpRest\Controllers\CommonController@multi');
 
             //one
-            $router->get('rest/{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
+            $router->get('{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
                 '\LpRest\Controllers\\CommonController@one');
-            $router->get('rest/{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}/{relations:[A-Za-z][A-Za-z0-9\/]+}',
+            $router->get('{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}/{relations:[A-Za-z][A-Za-z0-9\/]+}',
                 '\LpRest\Controllers\\CommonController@one');
 
             //delete
-            $router->delete('rest/{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
+            $router->delete('{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
                 '\LpRest\Controllers\\CommonController@delete');
 
             //create
-            $router->post('rest/{modelName:^[A-Za-z][A-Za-z0-9]+}',
+            $router->post('{modelName:^[A-Za-z][A-Za-z0-9]+}',
                 '\LpRest\Controllers\\CommonController@create');
 
             //
-            $router->put('rest/{modelName:^[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
+            $router->put('{modelName:^[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
                 '\LpRest\Controllers\\CommonController@update');
 
             //call
-            $router->post('rest/{modelName:^[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}/{methodName:^[A-Za-z][A-Za-z0-9]+}',
+            $router->post('{modelName:^[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}/{methodName:^[A-Za-z][A-Za-z0-9]+}',
                 '\LpRest\Controllers\\CommonController@call');
         });
     }

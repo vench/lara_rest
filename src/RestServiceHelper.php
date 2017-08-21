@@ -11,7 +11,23 @@ namespace LpRest;
 
 class RestServiceHelper
 {
-    public function setRouteGroupOptions($optionGroup) {
-        var_dump($optionGroup); exit();
+    /**
+     * @var array
+     */
+    private $routeGroupOptions;
+
+    /**
+     * @param array $routeGroupOptions
+     */
+    public function setRouteGroupOptions(array $routeGroupOptions = []) {
+        $this->routeGroupOptions = $routeGroupOptions;
     }
+
+    /**
+     * @return array
+     */
+    public function getRouteGroupOptions() {
+        return $this->routeGroupOptions;
+    }
+
 }
