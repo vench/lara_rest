@@ -15,6 +15,19 @@ namespace LpRest\Repositories;
 interface CommonRepositoryModel
 {
 
+    const ACTION_ALL = 'all';
+
+    const ACTION_ONE = 'one';
+
+    const ACTION_DELETE = 'delete';
+
+    const ACTION_CREATE = 'create';
+
+    const ACTION_UPDATE = 'update';
+
+    const ACTION_CALL = 'call';
+
+
     /**
      * @param array $merge
      * @return array
@@ -27,6 +40,7 @@ interface CommonRepositoryModel
     public function getRestCustomAttributeNames();
 
     /**
+     * Use ACTION_*
      * @return array
      */
     public function getRestAccessPermissionAliases();
