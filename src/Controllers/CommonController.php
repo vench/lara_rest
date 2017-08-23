@@ -270,6 +270,9 @@ class CommonController extends Controller
 
         $action = $r->getAccessPermissionName($methodShort);
 
+        if($action === true) {
+            return null;
+        }
         if(is_string($action) && !is_null( $this->accessProvider) && $this->accessProvider->checkAccess($action)) {
             return null;
         }
