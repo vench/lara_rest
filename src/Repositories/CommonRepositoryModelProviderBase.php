@@ -16,6 +16,11 @@ class CommonRepositoryModelProviderBase implements CommonRepositoryModelProvider
      */
     protected static $listModelAliases = [];
 
+    /**
+     * @var bool
+     */
+    private $useAbort = true;
+
 
     /**
      * @param string $alias
@@ -23,6 +28,13 @@ class CommonRepositoryModelProviderBase implements CommonRepositoryModelProvider
      */
     public function addModelAliases(string $alias, string $modelName) {
         self::$listModelAliases[$alias] = $modelName;
+    }
+
+    /**
+     * @param $useAbort
+     */
+    public function setUseAbort(boolean $useAbort) {
+        $this->useAbort = $useAbort;
     }
 
 
@@ -41,12 +53,18 @@ class CommonRepositoryModelProviderBase implements CommonRepositoryModelProvider
         }
 
         if (!class_exists($reflectionName)) {
+            if($this->useAbort) {
+                abort(404);
+            }
             throw new \Exception("Class {$modelName} not found");
         }
 
         $ref = new \ReflectionClass($reflectionName);
 
         if(!$ref->implementsInterface(CommonRepositoryModel::class)) {
+            if($this->useAbort) {
+                abort(404);
+            }
             throw new \Exception("Class {$modelName} not implements App\Rest\Repositories\CommonRepositoryModel");
         }
 

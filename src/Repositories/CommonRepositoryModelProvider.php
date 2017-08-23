@@ -24,4 +24,10 @@ interface CommonRepositoryModelProvider
      * @return void
      */
     public function addModelAliases(string $alias, string $modelName);
+
+    /**
+     * @param bool $useAbort
+     * @return void
+     */
+    public function setUseAbort(boolean $useAbort);
 }
