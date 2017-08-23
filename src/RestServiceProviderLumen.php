@@ -90,15 +90,15 @@ class RestServiceProviderLumen extends ServiceProvider
                 '\LpRest\Controllers\\CommonController@delete');
 
             //create
-            $router->post('{modelName:^[A-Za-z][A-Za-z0-9]+}',
+            $router->post('{modelName:[A-Za-z][A-Za-z0-9]+}',
                 '\LpRest\Controllers\\CommonController@create');
 
             //
-            $router->put('{modelName:^[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
+            $router->put('{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}',
                 '\LpRest\Controllers\\CommonController@update');
 
             //call
-            $router->post('{modelName:^[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}/{methodName:^[A-Za-z][A-Za-z0-9]+}',
+            $router->post('{modelName:[A-Za-z][A-Za-z0-9]+}/{id:[0-9]+}/{methodName:^[A-Za-z][A-Za-z0-9]+}',
                 '\LpRest\Controllers\\CommonController@call');
         });
     }
