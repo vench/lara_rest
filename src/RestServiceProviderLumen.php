@@ -16,8 +16,13 @@ use LpRest\Repositories\CommonRepositoryAccessProvider;
 use LpRest\Repositories\CommonRepositoryAccessProviderBase;
 use LpRest\Controllers\CommonResponse;
 use LpRest\Controllers\CommonResponseBase;
+use LpRest\Repositories\RepositoryProvider;
+use LpRest\Repositories\RepositoryProviderBase;
 
-
+/**
+ * Class RestServiceProviderLumen
+ * @package LpRest
+ */
 class RestServiceProviderLumen extends ServiceProvider
 {
 
@@ -26,6 +31,9 @@ class RestServiceProviderLumen extends ServiceProvider
      */
     private $restServiceHelper;
 
+    /**
+     *
+     */
     public function boot()
     {
 
@@ -51,6 +59,11 @@ class RestServiceProviderLumen extends ServiceProvider
 
         $this->app->bindIf(CommonResponse::class,
             CommonResponseBase::class, true);
+
+        $this->app->bindIf(RepositoryProvider::class,
+            RepositoryProviderBase::class, true);
+
+
     }
 
 

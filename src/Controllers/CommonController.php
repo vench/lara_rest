@@ -7,6 +7,7 @@ use LpRest\Repositories\CommonRepositoryAccessProvider;
 use LpRest\Repositories\Repository;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use LpRest\Repositories\RepositoryProvider;
 
 /**
  * Created by PhpStorm.
@@ -28,10 +29,24 @@ class CommonController extends Controller
      */
     private $commonResponse;
 
-    public function __construct(CommonRepositoryAccessProvider $accessProvider, CommonResponse $commonResponse)
+    /**
+     * @var RepositoryProvider
+     */
+    private $repositoryProvider;
+
+    /**
+     * CommonController constructor.
+     * @param CommonRepositoryAccessProvider $accessProvider
+     * @param CommonResponse $commonResponse
+     * @param RepositoryProvider $repositoryProvider
+     */
+    public function __construct(CommonRepositoryAccessProvider $accessProvider,
+                                CommonResponse $commonResponse,
+                                RepositoryProvider $repositoryProvider)
     {
         $this->accessProvider = $accessProvider;
         $this->commonResponse = $commonResponse;
+        $this->repositoryProvider = $repositoryProvider;
     }
 
 
@@ -299,8 +314,7 @@ class CommonController extends Controller
      * @return \LpRest\Repositories\Repository;
      */
     private function getRepository($modelName)  {
-        //TODO check custom repository
-
-        return CommonRepository::createByModelName($modelName);
+        $repository = $this->repositoryProvider->getRepository($modelName);
+        return $repository;
     }
 }
