@@ -35,6 +35,11 @@ class CommonController extends Controller
     private $repositoryProvider;
 
     /**
+     * @var array
+     */
+    private $defaultErrorMessages = [];
+
+    /**
      * CommonController constructor.
      * @param CommonRepositoryAccessProvider $accessProvider
      * @param CommonResponse $commonResponse
@@ -258,6 +263,13 @@ class CommonController extends Controller
         return $this->responseResult($result);
     }
 
+    /**
+     * @param array $defaultErrorMessages
+     */
+    public function setDefaultErrorMessages(array $defaultErrorMessages) {
+        $this->defaultErrorMessages = $defaultErrorMessages;
+    }
+
 
     /**
      * @param \LpRest\Repositories\Repository $r
@@ -266,7 +278,7 @@ class CommonController extends Controller
      * @return \Illuminate\Http\JsonResponse|null
      */
     private function checkValidate($r, array $entity = [], array $body = []) {
-        if(($errors = $r->validate($entity)) !== true) {
+        if(($errors = $r->validate($entity, $this->defaultErrorMessages)) !== true) {
             return $this->responseResult($body, false, $errors);
         }
 
