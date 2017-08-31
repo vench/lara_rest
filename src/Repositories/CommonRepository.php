@@ -29,7 +29,7 @@ class CommonRepository implements Repository
     /**
      * @var array
      */
-    private $customAttributes = [];
+    private $customErrorMessages = [];
 
     /**
      * @var array
@@ -59,7 +59,7 @@ class CommonRepository implements Repository
 
         $this->queryBuilder = $model->getRestQuery();
         $this->rules = $model->getRestRules();
-        $this->customAttributes = $model->getRestCustomAttributeNames();
+        $this->customErrorMessages = $model->getRestCustomErrorMessages();
         $this->accessPermissionNames = $model->getRestAccessPermissionAliases();
     }
 
@@ -197,16 +197,12 @@ class CommonRepository implements Repository
      */
     public function validate(array $dataFields, $messages = []) {
 
-        $defaultMessages = [
-            'required'  => 'Поле :attribute должно быть заполнено.',
-            'min'       => 'Поле :attribute должно содержать минимум :min символов.',
-            'unique'    => 'Такой :attribute уже был добавлен.'
-        ];
+        $defaultMessages = $this->customErrorMessages;
 
         $rules = $this->makeRules(  $dataFields);
 
         $validator = app(Factory::class)
-            ->make($dataFields, $rules, array_merge($defaultMessages, $messages), $this->customAttributes);
+            ->make($dataFields, $rules, array_merge($defaultMessages, $messages));
 
         if ($validator->fails()) {
             return $validator->getMessageBag()->toArray();

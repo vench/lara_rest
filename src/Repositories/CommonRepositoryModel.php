@@ -37,7 +37,7 @@ interface CommonRepositoryModel
     /**
      * @return array
      */
-    public function getRestCustomAttributeNames();
+    public function getRestCustomErrorMessages();
 
     /**
      * Use ACTION_*
