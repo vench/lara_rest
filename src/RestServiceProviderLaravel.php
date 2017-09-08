@@ -22,7 +22,6 @@ use Route;
 /**
  * Class RestServiceProviderLaravel
  * @package LpRest
- * @todo Not yet implemented
  */
 class RestServiceProviderLaravel extends ServiceProvider
 {

@@ -14,7 +14,7 @@ class RestServiceHelper
     /**
      * @var array
      */
-    private $routeGroupOptions;
+    private $routeGroupOptions = [];
 
     /**
      * @param array $routeGroupOptions
