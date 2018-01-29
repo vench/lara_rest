@@ -1,7 +1,11 @@
 
 #Lp api rest
 
+This package allows you to create a simple REST API on the basis of standard models (Eloquent) of the Larave 5.x Framework. 
+
 ##install
+
+##Configure
 - Add app.php 
 
         $app->register(LpRest\RestServiceProvider::class);
