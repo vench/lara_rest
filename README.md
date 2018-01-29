@@ -35,3 +35,12 @@ This package allows you to create a simple REST API on the basis of standard mod
                             //'middleware'     => 'auth',
                         ]);
                     });  
+                    
+##API
+- GET /api/rest/:modelName[/:relations]  - get all items
+- GET /api/rest/:modelName/:id[/:relations] - get one item
+- POST /api/rest/:modelName {:json body} - create item
+- PUT /api/rest/:modelName/:id {:json body}   - update item
+- DELETE /api/rest/:modelName/:id - remove item
+- POST /api/rest/:modelName/:id {:json body - arguments} - Call model method
+- POST /api/rest/multi {:json body - config any query} - Causes several methods at a time
