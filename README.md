@@ -4,6 +4,7 @@
 This package allows you to create a simple REST API on the basis of standard models (Eloquent) of the Larave 5.x Framework. 
 
 ##install
+- composer require venya/lp-rest
 
 ##Configure
 - Add app.php 
