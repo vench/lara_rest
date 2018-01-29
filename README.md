@@ -9,6 +9,9 @@ This package allows you to create a simple REST API on the basis of standard mod
 - Add app.php 
 
         $app->register(LpRest\RestServiceProvider::class);
+        
+        //$app->register(LpRest\RestServiceProviderLumen::class); //for Lumen
+        
 - Add in AppServiceProvider::register
         
         //Set model aliases
