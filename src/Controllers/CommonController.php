@@ -305,7 +305,7 @@ class CommonController extends Controller
         }
 
         return $this->responseResult([ ], false, [
-            ['Insufficient rights']
+            ['Insufficient rights '.$action]
         ], 403);
     }
 
