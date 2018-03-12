@@ -30,10 +30,10 @@ class PermGroup extends Migration
         });
 
         Schema::create('rest_access_user', function (Blueprint $table) {
-            $table->string('access', 64);
+            $table->string('access_name', 64);
             $table->string('user_outer', 64);
             $table->timestamps();
-            $table->primary(['name', 'user_outer']);
+            $table->primary(['access_name', 'user_outer']);
         });
 
 
@@ -43,7 +43,7 @@ class PermGroup extends Migration
         });
 
         Schema::table('rest_access_user', function (Blueprint $table) {
-            $table->foreign('access')->references('name')->on('rest_access')->onDelete('cascade');
+            $table->foreign('access_name')->references('name')->on('rest_access')->onDelete('cascade');
         });
 
     }
