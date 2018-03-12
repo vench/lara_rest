@@ -56,7 +56,7 @@ class PermGroup extends Migration
     public function down()
     {
         Schema::table('rest_access_user', function (Blueprint $table) {
-            $table->dropForeign(['access']);
+            $table->dropForeign(['access_name']);
         });
 
         Schema::table('rest_group_permission', function (Blueprint $table) {
