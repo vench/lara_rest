@@ -17,6 +17,7 @@ use LpRest\Controllers\CommonResponse;
 use LpRest\Controllers\CommonResponseBase;
 use LpRest\Repositories\RepositoryProvider;
 use LpRest\Repositories\RepositoryProviderBase;
+use LpRest\Commands\AccessFillCommand;
 use Route;
 
 /**
@@ -65,7 +66,7 @@ class RestServiceProviderLaravel extends ServiceProvider
             RepositoryProviderBase::class, true);
 
         $this->commands([
-            \LpRest\Commands\AccessFillCommand::class,
+            AccessFillCommand::class,
         ]);
 
 
