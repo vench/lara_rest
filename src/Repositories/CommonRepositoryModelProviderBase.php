@@ -70,4 +70,11 @@ class CommonRepositoryModelProviderBase implements CommonRepositoryModelProvider
 
         return $ref->newInstance();
     }
+
+    /**
+     * @return array
+     */
+    public function getRegisteredAliases():array {
+        return array_keys(self::$listModelAliases);
+    }
 }

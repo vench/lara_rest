@@ -30,4 +30,9 @@ interface CommonRepositoryModelProvider
      * @return void
      */
     public function setUseAbort(boolean $useAbort);
+
+    /**
+     * @return array
+     */
+    public function getRegisteredAliases():array;
 }
