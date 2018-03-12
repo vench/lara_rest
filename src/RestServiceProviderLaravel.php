@@ -40,6 +40,8 @@ class RestServiceProviderLaravel extends ServiceProvider
 
         $this->registerRoute();
 
+        $this->handleMigrations();
+
     }
 
     /**
@@ -105,5 +107,14 @@ class RestServiceProviderLaravel extends ServiceProvider
         });
     }
 
+
+    /**
+     *
+     */
+    private function handleMigrations() {
+        $this->loadMigrationsFrom([
+            __DIR__ . '/migrations',
+        ]);
+    }
 
 }

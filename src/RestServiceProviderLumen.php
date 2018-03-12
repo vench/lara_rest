@@ -22,6 +22,8 @@ use LpRest\Repositories\RepositoryProviderBase;
 /**
  * Class RestServiceProviderLumen
  * @package LpRest
+ *
+ * TODO add @handleMigrations()
  */
 class RestServiceProviderLumen extends ServiceProvider
 {
