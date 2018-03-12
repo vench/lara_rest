@@ -35,8 +35,10 @@ class AccessFillCommand extends Command
     /**
      * AccessFillCommand constructor.
      * @param CommonRepositoryModelProvider $modelProvider
+     * @param null $name
      */
-    public function __construct(CommonRepositoryModelProvider $modelProvider)    {
+    public function __construct(CommonRepositoryModelProvider $modelProvider, $name = null)    {
+        parent::__construct($name);
         $this->modelProvider = $modelProvider;
     }
 
