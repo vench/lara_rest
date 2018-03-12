@@ -64,6 +64,11 @@ class RestServiceProviderLaravel extends ServiceProvider
         $this->app->bindIf(RepositoryProvider::class,
             RepositoryProviderBase::class, true);
 
+        $this->commands([
+            \LpRest\Commands\AccessFillCommand::class,
+        ]);
+
+
     }
 
     /**
