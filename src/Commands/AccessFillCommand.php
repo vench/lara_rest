@@ -56,8 +56,8 @@ class AccessFillCommand extends Command
 
             $accesses = RestAccess::query()
                 ->where('type', RestAccess::TYPE_PERMISSION)
-                ->where('name', 'in', array_values($permissions))
-                ->all();
+                ->whereIn('name',  array_values($permissions))
+                ->get();
 
             foreach ($accesses as $item) {
                 //check isset
