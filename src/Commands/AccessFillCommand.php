@@ -52,11 +52,13 @@ class AccessFillCommand extends Command
             echo $alias, PHP_EOL;
 
             $model = $this->modelProvider->getModelByName($alias);
-            $permissions = $model->getRestAccessPermissionAliases();
+            $permissions = array_values(
+                $model->getRestAccessPermissionAliases());
+
 
             $accesses = RestAccess::query()
                 ->where('type', RestAccess::TYPE_PERMISSION)
-                ->whereIn('name',  array_values($permissions))
+                ->whereIn('name',  $permissions)
                 ->get();
 
             foreach ($accesses as $item) {
