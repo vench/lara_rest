@@ -48,38 +48,37 @@ class AccessFillCommand extends Command
      */
     public function handle() {
 
+        $accesses = RestAccess::query()
+            ->where('type', RestAccess::TYPE_PERMISSION)
+            ->get();
+
+        $permissions = [];
+
         foreach ($this->modelProvider->getRegisteredAliases() as $alias) {
-            echo $alias, PHP_EOL;
-
             $model = $this->modelProvider->getModelByName($alias);
-            $permissions = array_values(
-                $model->getRestAccessPermissionAliases());
-
-
-            $accesses = RestAccess::query()
-                ->where('type', RestAccess::TYPE_PERMISSION)
-                ->whereIn('name',  $permissions)
-                ->get();
-
-            foreach ($accesses as $item) {
-                //check isset
-                if(($key = array_search($item->name, $permissions)) !== false) {
-                    unset($permissions[$key]);
-                    continue;
-                }
-
-                //delete
-                $item->delete();
-            }
-
-            //insert
-            foreach ($permissions as $permission) {
-                RestAccess::query()->insert([
-                    'name'          => $permission,
-                    'type'          => RestAccess::TYPE_PERMISSION,
-                    'description'   => $permission,
-                ]);
-            }
+            $permissions = array_merge($permissions, array_values(
+                $model->getRestAccessPermissionAliases()));
         }
+
+        foreach ($accesses as $item) {
+            //check isset
+            if(($key = array_search($item->name, $permissions)) !== false) {
+                unset($permissions[$key]);
+                continue;
+            }
+
+            //delete
+            $item->delete();
+        }
+
+        //insert
+        foreach ($permissions as $permission) {
+            RestAccess::query()->insert([
+                'name'          => $permission,
+                'type'          => RestAccess::TYPE_PERMISSION,
+                'description'   => $permission,
+            ]);
+        }
+
     }
 }

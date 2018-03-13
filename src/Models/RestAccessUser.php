@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string $access_name
  * @property string $user_outer
+ *
+ * @property RestAccess $restAccess
  */
 class RestAccessUser extends Model
 {
@@ -34,8 +36,25 @@ class RestAccessUser extends Model
     /**
      * @return mixed
      */
-    public function getAccesses() {
-        return $this->belongsToMany(RestAccess::class, 'name', 'access_name');
+    public function restAccess() {
+        return $this->hasOne(
+            RestAccess::class,
+            'name',
+            'access_name'
+        );
+    }
+
+
+    /**
+     * @param string $accessName
+     * @return bool
+     */
+    public function checkAccess( $accessName) {
+        if ($this->access_name === $accessName) {
+            return true;
+        }
+
+        return (!is_null($this->restAccess)  && $this->restAccess->checkAccess($accessName));
     }
 
 }

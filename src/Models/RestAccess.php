@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $description
  *
+ * @property RestAccess[] $childAccesses
  */
 class RestAccess extends Model
 {
@@ -47,7 +48,36 @@ class RestAccess extends Model
     /**
      * @return mixed
      */
-    public function getPermissions() {
-        return $this->belongsToMany(static::class, 'rest_group_permission', 'group', 'permission');
+    public function childAccesses() {
+        return $this->belongsToMany(
+            static::class,
+            'rest_group_permission', 'group', 'permission');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGroup() {
+        return $this->type == self::TYPE_GROUP;
+    }
+
+    /**
+     * @param string $accessName
+     * @return bool
+     */
+    public function checkAccess( $accessName) {
+        if ($this->name === $accessName) {
+            return true;
+        }
+
+        if($this->isGroup()) {
+            foreach ($this->childAccesses as $access) {
+                if ($access->checkAccess($accessName)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
