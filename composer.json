@@ -10,7 +10,7 @@
         }
     },
     "autoload-dev": {
-
+        "laravel/framework": "5.5.*"
     },
     "authors": [
         {

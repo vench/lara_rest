@@ -3,6 +3,7 @@
 namespace LpRest\Commands;
 
 use Illuminate\Console\Command;
+use LpRest\Models\RestAccess;
 use LpRest\Repositories\CommonRepositoryModelProvider;
 
 /**
@@ -49,6 +50,34 @@ class AccessFillCommand extends Command
 
         foreach ($this->modelProvider->getRegisteredAliases() as $alias) {
             echo $alias, PHP_EOL;
+
+            $model = $this->modelProvider->getModelByName($alias);
+            $permissions = $model->getRestAccessPermissionAliases();
+
+            $accesses = RestAccess::query()
+                ->where('type', RestAccess::TYPE_PERMISSION)
+                ->where('name', 'in', array_values($permissions))
+                ->all();
+
+            foreach ($accesses as $item) {
+                //check isset
+                if(($key = array_search($item->name, $permissions)) !== false) {
+                    unset($permissions[$key]);
+                    continue;
+                }
+
+                //delete
+                $item->delete();
+            }
+
+            //insert
+            foreach ($permissions as $permission) {
+                RestAccess::query()->insert([
+                    'name'          => $permission,
+                    'type'          => RestAccess::TYPE_PERMISSION,
+                    'description'   => $permission,
+                ]);
+            }
         }
     }
 }
