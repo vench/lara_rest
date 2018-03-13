@@ -18,7 +18,7 @@ class AccessFillCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'rest:fill-access';
+    protected $signature = 'rest:fill-access {--safe}';
 
     /**
      * The console command description.
@@ -53,11 +53,15 @@ class AccessFillCommand extends Command
             ->get();
 
         $permissions = [];
+        $groups = [];
+        $safe = $this->option('safe');
 
         foreach ($this->modelProvider->getRegisteredAliases() as $alias) {
             $model = $this->modelProvider->getModelByName($alias);
-            $permissions = array_merge($permissions, array_values(
-                $model->getRestAccessPermissionAliases()));
+            $perms = array_values( $model->getRestAccessPermissionAliases());
+
+            $groups[$alias] = $perms;
+            $permissions = array_merge($permissions, $perms);
         }
 
         foreach ($accesses as $item) {
@@ -68,7 +72,9 @@ class AccessFillCommand extends Command
             }
 
             //delete
-            $item->delete();
+            if(!$safe) {
+                $item->delete();
+            }
         }
 
         //insert
@@ -80,5 +86,25 @@ class AccessFillCommand extends Command
             ]);
         }
 
+
+        //create group
+        foreach ($groups as $alias => $perms) {
+            $access = RestAccess::query()
+                ->where('type', RestAccess::TYPE_GROUP)
+                ->where('name', $alias)
+                ->first();
+
+            if(!is_null($access)) {
+                continue;
+            }
+
+            RestAccess::query()->insert([
+                'name'          => $alias,
+                'type'          => RestAccess::TYPE_GROUP,
+                'description'   => $alias,
+            ]);
+
+            RestAccess::groupAddChilds($alias, $perms);
+        }
     }
 }

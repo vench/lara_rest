@@ -9,6 +9,7 @@
 namespace LpRest\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Group
@@ -79,5 +80,18 @@ class RestAccess extends Model
         }
 
         return false;
+    }
+
+    /**
+     * @param $group
+     * @param array $chlds
+     */
+    public static function groupAddChilds($group, array $chlds) {
+        foreach ($chlds as $permission) {
+            DB::table('rest_group_permission')->insert([
+                'permission'    => $permission,
+                'group'         => $group,
+            ]);
+        }
     }
 }
