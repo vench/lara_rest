@@ -62,6 +62,13 @@ trait CommonRepositoryModelTrait
     }
 
     /**
+     * @return null
+     */
+    public function getAccessPermissionOwnedField() {
+        return null;
+    }
+
+    /**
      * @param string|object $klass
      * @return string
      */

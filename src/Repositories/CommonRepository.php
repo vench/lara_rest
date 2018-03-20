@@ -8,7 +8,7 @@
 
 namespace LpRest\Repositories;
 
-use Symfony\Component\Debug\Exception\ClassNotFoundException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Factory;
 
 class CommonRepository implements Repository
@@ -41,6 +41,11 @@ class CommonRepository implements Repository
      */
     private $commonRepositoryModelProvider;
 
+    /**
+     * @var string
+     */
+    private $accessPermissionOwnedField = null;
+
 
     /**
      * CommonRepository constructor.
@@ -61,6 +66,7 @@ class CommonRepository implements Repository
         $this->rules = $model->getRestRules();
         $this->customErrorMessages = $model->getRestCustomErrorMessages();
         $this->accessPermissionNames = $model->getRestAccessPermissionAliases();
+        $this->accessPermissionOwnedField = $model->getAccessPermissionOwnedField();
     }
 
 
@@ -74,6 +80,7 @@ class CommonRepository implements Repository
     public function all($offset = 0, array $orders = null, array $filters = null, array $relations = null, $limit = self::DEFAULT_LIMIT)
     {
         $this->applyFilter($filters);
+        $this->applyFilterOwner();
         $total = $this->queryBuilder->count();
 
         $this->applyRelations($relations);
@@ -94,6 +101,7 @@ class CommonRepository implements Repository
     public function one(int $id, array $relations = null)
     {
         $this->applyRelations($relations);
+        $this->applyFilterOwner();
         return $this->queryBuilder->find($id);
     }
 
@@ -103,6 +111,7 @@ class CommonRepository implements Repository
      */
     public function delete(int $id)
     {
+        $this->applyFilterOwner();
         return $this->queryBuilder->find($id)->delete() > 0;
     }
 
@@ -126,6 +135,7 @@ class CommonRepository implements Repository
      */
     public function update(int $id, array $dataFields = [])
     {
+        $this->applyFilterOwner();
         return $this->queryBuilder->find($id)->update($dataFields);
     }
 
@@ -137,6 +147,16 @@ class CommonRepository implements Repository
     public function getAccessPermissionName(string $method)
     {
         return isset ($this->accessPermissionNames[$method]) ? $this->accessPermissionNames[$method] : null;
+    }
+
+    /**
+     *
+     */
+    public function getAccessPermissionOwnedField()
+    {
+        //TODO check model field and check exclude role list
+        return 'user_id';
+        return null;
     }
 
 
@@ -160,6 +180,17 @@ class CommonRepository implements Repository
                 list($column, $direction ) = $order;
                 $this->queryBuilder->orderBy($column, $direction);
             }
+        }
+    }
+
+    /**
+     *
+     */
+    private function applyFilterOwner() {
+        if(!is_null($field = $this->accessPermissionOwnedField)) {
+            $this->applyFilter([
+                [$field, Auth::id()],
+            ]);
         }
     }
 

@@ -49,4 +49,9 @@ interface CommonRepositoryModel
      * @return \Illuminate\Database\Query\Builder
      */
     public function getRestQuery();
+
+    /**
+     * @return string|null
+     */
+    public function getAccessPermissionOwnedField();
 }
