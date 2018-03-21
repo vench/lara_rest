@@ -18,15 +18,7 @@ use \LpRest\Facades\CommonRepositoryAccessProvider;
 trait CommonRepositoryModelTrait
 {
 
-    /**
-     * @var array
-     */
-    protected $accessPermissionOwnedFieldExcludes = [];
 
-    /**
-     * @var string
-     */
-    protected $accessPermissionOwnedField = null;
 
 
     /**
@@ -73,15 +65,29 @@ trait CommonRepositoryModelTrait
     }
 
     /**
-     * @return null
+     * @return null|string
      */
     public function getAccessPermissionOwnedField() {
-        foreach ($this->accessPermissionOwnedFieldExcludes as $access) {
+        foreach ($this->accessPermissionOwnedFieldExcludes() as $access) {
             if(CommonRepositoryAccessProvider::checkAccess($access)) {
                 return null;
             }
         }
-        return $this->accessPermissionOwnedField;
+        return $this->accessPermissionOwnedField();
+    }
+
+    /**
+     * @return array
+     */
+    protected function accessPermissionOwnedFieldExcludes() {
+        return [];
+    }
+
+    /**
+     * @return null|string
+     */
+    protected function accessPermissionOwnedField() {
+        return null;
     }
 
     /**
