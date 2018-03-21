@@ -239,7 +239,7 @@ class CommonRepository implements Repository
             list($table, $column) = explode('.', $column);
             $self = $this;
             $queryBuilder->whereHas($table, function ($query) use(&$column, &$value, &$operator, &$boolean, &$self)  {
-                $self->addWhereCondition($column, $operator, $value, $boolean, $query);
+                $self->addWhereCondition($column, $value, $operator, $boolean, $query);
             });
 
             return;
