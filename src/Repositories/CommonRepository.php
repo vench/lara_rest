@@ -208,6 +208,7 @@ class CommonRepository implements Repository
 
     /**
      * @param array|null $filters
+     * @todo   refactoring
      */
     private function applyFilter(array $filters = null) {
         if(!empty($filters)) {
@@ -217,7 +218,13 @@ class CommonRepository implements Repository
                     $this->queryBuilder->where($column, '=', $value);
                 } else if(count($filter) == 3){
                     list($column, $operator, $value) = $filter;
-                    $this->queryBuilder->where($column, $operator, $value);
+
+                    if($operator == 'range') {
+                        $this->queryBuilder->whereBetween($column, explode(',', $value));
+                    } else {
+                        $this->queryBuilder->where($column, $operator, $value);
+                    }
+
                 } else if(count($filter) == 4){
                     list($column, $operator, $value, $boolean) = $filter;
                     $boolean = strtolower($boolean);
