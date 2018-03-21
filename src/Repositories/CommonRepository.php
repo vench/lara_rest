@@ -160,15 +160,6 @@ class CommonRepository implements Repository
         return isset ($this->accessPermissionNames[$method]) ? $this->accessPermissionNames[$method] : null;
     }
 
-    /**
-     *
-     */
-    public function getAccessPermissionOwnedField()
-    {
-        //TODO check model field and check exclude role list
-        return 'user_id';
-        return null;
-    }
 
 
     /**
@@ -208,33 +199,64 @@ class CommonRepository implements Repository
 
     /**
      * @param array|null $filters
-     * @todo   refactoring
      */
     private function applyFilter(array $filters = null) {
         if(!empty($filters)) {
+
             foreach ($filters as $filter) {
                 if(count($filter) == 2) {
                     list($column, $value) = $filter;
-                    $this->queryBuilder->where($column, '=', $value);
+                    $this->addWhereCondition($column, $value);
                 } else if(count($filter) == 3){
                     list($column, $operator, $value) = $filter;
-
-                    if($operator == 'range') {
-                        $this->queryBuilder->whereBetween($column, explode(',', $value));
-                    } else {
-                        $this->queryBuilder->where($column, $operator, $value);
-                    }
-
+                    $this->addWhereCondition($column, $value, $operator);
                 } else if(count($filter) == 4){
                     list($column, $operator, $value, $boolean) = $filter;
                     $boolean = strtolower($boolean);
                     if(!in_array($boolean, ['and', 'or'])) {
                         $boolean = 'and';
                     }
-                    $this->queryBuilder->where($column, $operator, $value, $boolean);
+                    $this->addWhereCondition($column, $value, $operator, $boolean);
                 }
             }
         }
+    }
+
+    /**
+     * @param $column
+     * @param $value
+     * @param string $operator
+     * @param string $boolean
+     * @param null $queryBuilder
+     */
+    private function addWhereCondition($column, $value, $operator = '=', $boolean = 'and', $queryBuilder = null) {
+
+        if(is_null($queryBuilder)) {
+            $queryBuilder = $this->queryBuilder;
+        }
+
+        if(strpos($column, '.') !== false) {
+            list($table, $column) = explode('.', $column);
+            $self = $this;
+            $queryBuilder->whereHas($table, function ($query) use(&$column, &$value, &$operator, &$boolean, &$self)  {
+                $self->addWhereCondition($column, $operator, $value, $boolean, $query);
+            });
+        }
+
+        switch ($operator) {
+            case 'range':
+                $queryBuilder->whereBetween($column, explode(',', $value), $boolean);
+                break;
+            case 'in':
+                $queryBuilder->whereIn($column, explode(',', $value), $boolean);
+                break;
+
+            default:
+                $queryBuilder->where($column, $operator, $value, $boolean);
+                break;
+        }
+
+
     }
 
 
