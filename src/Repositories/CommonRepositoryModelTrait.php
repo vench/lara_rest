@@ -21,12 +21,12 @@ trait CommonRepositoryModelTrait
     /**
      * @var array
      */
-    protected $accessPermissionOwnedFieldExcludes = ['admin'];
+    protected $accessPermissionOwnedFieldExcludes = [];
 
     /**
      * @var string
      */
-    protected $accessPermissionOwnedField = 'user_id';
+    protected $accessPermissionOwnedField = null;
 
 
     /**
