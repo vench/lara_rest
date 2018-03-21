@@ -7,6 +7,7 @@ use LpRest\Repositories\CommonRepositoryAccessProvider as AccessProviderContract
 
 /**
  * Class CommonRepositoryAccessProvider
+ * @package LpRest\Facades
  */
 class CommonRepositoryAccessProvider extends Facade
 {

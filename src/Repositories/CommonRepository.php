@@ -14,7 +14,6 @@ use Illuminate\Contracts\Validation\Factory;
 /**
  * Class CommonRepository
  * @package LpRest\Repositories
- * TODO check 404 if applyFilterOwner
  */
 class CommonRepository implements Repository
 {
@@ -117,7 +116,11 @@ class CommonRepository implements Repository
     public function delete(int $id)
     {
         $this->applyFilterOwner();
-        return $this->queryBuilder->find($id)->delete() > 0;
+        $model = $this->queryBuilder->find($id);
+        if(is_null($model)) {
+            return false;
+        }
+        return $model->delete() > 0;
     }
 
     /**
@@ -126,10 +129,9 @@ class CommonRepository implements Repository
      */
     public function create(array $dataFields = [])
     {
-        $instance = $this->queryBuilder->getModel()->newInstance($dataFields);
-
+        $instance = $this->queryBuilder->getModel()
+            ->newInstance($dataFields);
         $instance->save();
-
         return $instance->save() ? $instance->getKey() : false;
     }
 
@@ -141,7 +143,11 @@ class CommonRepository implements Repository
     public function update(int $id, array $dataFields = [])
     {
         $this->applyFilterOwner();
-        return $this->queryBuilder->find($id)->update($dataFields);
+        $model = $this->queryBuilder->find($id);
+        if(is_null($model)) {
+            return false;
+        }
+        return $model->update($dataFields);
     }
 
 
