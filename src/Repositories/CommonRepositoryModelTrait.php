@@ -8,6 +8,8 @@
 
 namespace LpRest\Repositories;
 
+use \LpRest\Facades\CommonRepositoryAccessProvider;
+
 
 /**
  * Trait CommonRepositoryModelTrait
@@ -16,6 +18,15 @@ namespace LpRest\Repositories;
 trait CommonRepositoryModelTrait
 {
 
+    /**
+     * @var array
+     */
+    protected $accessPermissionOwnedFieldExcludes = ['admin'];
+
+    /**
+     * @var string
+     */
+    protected $accessPermissionOwnedField = 'user_id';
 
 
     /**
@@ -65,7 +76,12 @@ trait CommonRepositoryModelTrait
      * @return null
      */
     public function getAccessPermissionOwnedField() {
-        return null;
+        foreach ($this->accessPermissionOwnedFieldExcludes as $access) {
+            if(CommonRepositoryAccessProvider::checkAccess($access)) {
+                return null;
+            }
+        }
+        return $this->accessPermissionOwnedField;
     }
 
     /**
