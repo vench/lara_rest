@@ -8,7 +8,10 @@
 
 namespace LpRest\Repositories;
 
-
+/**
+ * Class CommonRepositoryAccessProviderBase
+ * @package LpRest\Repositories
+ */
 class CommonRepositoryAccessProviderBase implements CommonRepositoryAccessProvider
 {
 

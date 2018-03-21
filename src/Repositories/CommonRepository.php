@@ -11,6 +11,11 @@ namespace LpRest\Repositories;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Factory;
 
+/**
+ * Class CommonRepository
+ * @package LpRest\Repositories
+ * TODO check 404 if applyFilterOwner
+ */
 class CommonRepository implements Repository
 {
 
