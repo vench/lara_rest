@@ -241,6 +241,8 @@ class CommonRepository implements Repository
             $queryBuilder->whereHas($table, function ($query) use(&$column, &$value, &$operator, &$boolean, &$self)  {
                 $self->addWhereCondition($column, $operator, $value, $boolean, $query);
             });
+
+            return;
         }
 
         switch ($operator) {
