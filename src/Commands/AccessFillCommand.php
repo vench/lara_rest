@@ -98,7 +98,7 @@ class AccessFillCommand extends Command
                 continue;
             }
 
-            RestAccess::query()->insert([
+            $groupId = RestAccess::query()->insertGetId([
                 'name'          => $alias,
                 'type'          => RestAccess::TYPE_GROUP,
                 'description'   => $alias,
@@ -106,8 +106,7 @@ class AccessFillCommand extends Command
 
 
             $models = RestAccess::query()->whereIn('name', $perms)->get();
-
-            RestAccess::groupAddChilds($alias, $models->map(function($model){
+            RestAccess::groupAddChilds($groupId, $models->map(function($model){
                 return $model->id;
             })->toArray());
         }
