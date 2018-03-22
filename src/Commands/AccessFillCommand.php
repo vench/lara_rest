@@ -109,7 +109,7 @@ class AccessFillCommand extends Command
 
             RestAccess::groupAddChilds($alias, $models->map(function($model){
                 return $model->id;
-            }));
+            })->toArray());
         }
     }
 }
