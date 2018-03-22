@@ -104,7 +104,12 @@ class AccessFillCommand extends Command
                 'description'   => $alias,
             ]);
 
-            RestAccess::groupAddChilds($alias, $perms);
+
+            $models = RestAccess::query()->whereIn('name', $perms)->get();
+
+            RestAccess::groupAddChilds($alias, $models->map(function($model){
+                return $model->id;
+            }));
         }
     }
 }
