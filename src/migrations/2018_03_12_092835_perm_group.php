@@ -15,22 +15,23 @@ class PermGroup extends Migration
     {
         //
         Schema::create('rest_access', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('name', 64)->unique();
             $table->enum('type', ['permission', 'group']);
             $table->string('description', 128);
             $table->timestamps();
-            $table->primary('name');
+
         });
 
         Schema::create('rest_group_permission', function (Blueprint $table) {
-            $table->string('group', 64);
-            $table->string('permission', 64);
+            $table->unsignedInteger('group');
+            $table->unsignedInteger('permission');
             $table->timestamps();
             $table->primary(['group', 'permission']);
         });
 
         Schema::create('rest_access_user', function (Blueprint $table) {
-            $table->string('access_name', 64);
+            $table->unsignedInteger('access_name');
             $table->string('user_outer', 64);
             $table->timestamps();
             $table->primary(['access_name', 'user_outer']);
@@ -38,12 +39,12 @@ class PermGroup extends Migration
 
 
         Schema::table('rest_group_permission', function (Blueprint $table) {
-            $table->foreign('group')->references('name')->on('rest_access')->onDelete('cascade');
-            $table->foreign('permission')->references('name')->on('rest_access')->onDelete('cascade');
+            $table->foreign('group')->references('id')->on('rest_access')->onDelete('cascade');
+            $table->foreign('permission')->references('id')->on('rest_access')->onDelete('cascade');
         });
 
         Schema::table('rest_access_user', function (Blueprint $table) {
-            $table->foreign('access_name')->references('name')->on('rest_access')->onDelete('cascade');
+            $table->foreign('access_name')->references('id')->on('rest_access')->onDelete('cascade');
         });
 
     }

@@ -28,10 +28,6 @@ class RestAccessUser extends Model
      */
     protected $table = 'rest_access_user';
 
-    /**
-     * @var string
-     */
-    protected $keyType = 'string';
 
     /**
      * @return mixed

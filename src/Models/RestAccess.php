@@ -38,12 +38,8 @@ class RestAccess extends Model
     /**
      * @var string
      */
-    protected $primaryKey = 'name';
+    protected $primaryKey = 'id';
 
-    /**
-     * @var string
-     */
-    protected $keyType = 'string';
 
 
     /**
