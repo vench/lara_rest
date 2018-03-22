@@ -23,32 +23,32 @@ class CommonRepository implements Repository
     /**
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    private $queryBuilder;
+    protected $queryBuilder;
 
     /**
      * @var array
      */
-    private $rules = [];
+    protected $rules = [];
 
     /**
      * @var array
      */
-    private $customErrorMessages = [];
+    protected $customErrorMessages = [];
 
     /**
      * @var array
      */
-    private $accessPermissionNames = [];
+    protected $accessPermissionNames = [];
 
     /**
      * @var CommonRepositoryModelProvider
      */
-    private $commonRepositoryModelProvider;
+    protected $commonRepositoryModelProvider;
 
     /**
      * @var string
      */
-    private $accessPermissionOwnedField = null;
+    protected $accessPermissionOwnedField = null;
 
 
     /**
@@ -65,7 +65,13 @@ class CommonRepository implements Repository
      */
     public function setModelName($modelName) {
         $model = $this->commonRepositoryModelProvider->getModelByName($modelName);
+        $this->setCommonRepositoryModel($model);
+    }
 
+    /**
+     * @param CommonRepositoryModel $model
+     */
+    public function setCommonRepositoryModel(CommonRepositoryModel $model) {
         $this->queryBuilder = $model->getRestQuery();
         $this->rules = $model->getRestRules();
         $this->customErrorMessages = $model->getRestCustomErrorMessages();
@@ -165,7 +171,7 @@ class CommonRepository implements Repository
     /**
      * @param array|null $relations
      */
-    private function applyRelations( array $relations = null) {
+    protected function applyRelations( array $relations = null) {
         if(!empty($relations)) {
             $model = $this->queryBuilder->getModel();
             $this->queryBuilder->with(array_filter($relations, function($name) use(&$model) { return method_exists($model, $name);}));
@@ -176,7 +182,7 @@ class CommonRepository implements Repository
     /**
      * @param array|null $orders
      */
-    private function applyOrder(array $orders = null) {
+    protected function applyOrder(array $orders = null) {
         if(!empty($orders)) {
             foreach ($orders as $order) {
                 list($column, $direction ) = $order;
@@ -188,7 +194,7 @@ class CommonRepository implements Repository
     /**
      *
      */
-    private function applyFilterOwner() {
+    protected function applyFilterOwner() {
         if(!is_null($field = $this->accessPermissionOwnedField)) {
             $this->applyFilter([
                 [$field, Auth::id()],
@@ -200,7 +206,7 @@ class CommonRepository implements Repository
     /**
      * @param array|null $filters
      */
-    private function applyFilter(array $filters = null) {
+    protected function applyFilter(array $filters = null) {
         if(!empty($filters)) {
 
             foreach ($filters as $filter) {
@@ -229,7 +235,7 @@ class CommonRepository implements Repository
      * @param string $boolean
      * @param null $queryBuilder
      */
-    private function addWhereCondition($column, $value, $operator = '=', $boolean = 'and', $queryBuilder = null) {
+    protected function addWhereCondition($column, $value, $operator = '=', $boolean = 'and', $queryBuilder = null) {
 
         if(is_null($queryBuilder)) {
             $queryBuilder = $this->queryBuilder;
@@ -288,7 +294,7 @@ class CommonRepository implements Repository
      * @param array $entity
      * @return array
      */
-    private function makeRules(array $entity = []) {
+    protected function makeRules(array $entity = []) {
         $rules = $this->rules;
         if(!empty($entity)) {
             $entityMath = array_filter($entity, function($value) { return !is_array($value); });
