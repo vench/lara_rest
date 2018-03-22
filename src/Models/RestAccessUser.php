@@ -35,7 +35,7 @@ class RestAccessUser extends Model
     public function restAccess() {
         return $this->hasOne(
             RestAccess::class,
-            'name',
+            'id',
             'access_name'
         );
     }
