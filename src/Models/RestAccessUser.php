@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class RestAccessUser
  * @package LpRest\Models
  *
- * @property string $access_name
+ * @property string $access_id
  * @property string $user_outer
  *
  * @property RestAccess $restAccess
@@ -36,7 +36,7 @@ class RestAccessUser extends Model
         return $this->hasOne(
             RestAccess::class,
             'id',
-            'access_name'
+            'access_id'
         );
     }
 
@@ -46,7 +46,7 @@ class RestAccessUser extends Model
      * @return bool
      */
     public function checkAccess( $accessName) {
-        if ($this->access_name === $accessName) {
+        if ($this->access_id === $accessName) {
             return true;
         }
 
