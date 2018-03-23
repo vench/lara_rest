@@ -51,6 +51,7 @@ class CommonRepositoryAccessProviderDB implements CommonRepositoryAccessProvider
      */
     public function checkAccessByUserId(string $accessName, int $id): bool {
         $models = RestAccessUser::query()
+            ->with(['restAccess'])
             ->where('user_outer', $id)->get();
         if(!empty($models)) {
 
