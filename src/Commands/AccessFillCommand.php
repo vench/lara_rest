@@ -58,7 +58,10 @@ class AccessFillCommand extends Command
 
         foreach ($this->modelProvider->getRegisteredAliases() as $alias) {
             $model = $this->modelProvider->getModelByName($alias);
-            $perms = array_values( $model->getRestAccessPermissionAliases());
+            $perms = array_filter(
+                array_values( $model->getRestAccessPermissionAliases()), function($val){
+                    return is_string($val);
+            });
 
             $groups[$alias] = $perms;
             $permissions = array_merge($permissions, $perms);
