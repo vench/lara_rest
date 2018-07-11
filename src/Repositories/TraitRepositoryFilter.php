@@ -86,4 +86,15 @@ trait TraitRepositoryFilter
     }
 
 
+    /**
+     * @param array|null $orders
+     */
+    protected function applyOrder(array $orders = null) {
+        if(!empty($orders)) {
+            foreach ($orders as $order) {
+                list($column, $direction ) = $order;
+                $this->queryBuilder->orderBy($column, $direction);
+            }
+        }
+    }
 }
