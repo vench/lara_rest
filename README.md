@@ -44,3 +44,7 @@ This package allows you to create a simple REST API on the basis of standard mod
 - DELETE /api/rest/:modelName/:id - remove item
 - POST /api/rest/:modelName/:id {:json body - arguments} - Call model method
 - POST /api/rest/multi {:json body - config any query} - Causes several methods at a time
+
+
+## TODO FILTER DESCRIPTION
+- /api/rest/file?filter[]=created_at:range:2018-03-01,2018-05-20&filter[]=tags.id:1&filter[]=id:in:1,2,3,18
