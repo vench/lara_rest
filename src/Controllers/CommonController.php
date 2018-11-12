@@ -69,13 +69,20 @@ class CommonController extends Controller
         }
         $page = $request->get('page', 1);
         $limit = $request->get('limit', Repository::DEFAULT_LIMIT);
+        $select = $request->get('select', '*');
 
         $relationsList = !empty($relations) ? explode('/', $relations) : null;
 
         $sort = $request->get('sort', null);
         $sortList = [];
         if(!empty($sort)) {
-            $sortList[] = strpos($sort, ':') !== false ? explode(':', $sort): [$sort, 'asc'];
+            $fnApplySort = function($sort){
+                return strpos($sort, ':') !== false ? explode(':', $sort): [$sort, 'asc'];
+            };
+            if(!is_array($sort)) {
+                $sort = [$sort];
+            }
+            $sortList = array_map($fnApplySort, $sort);
         }
 
         $filter = $request->get('filter', null);
@@ -88,7 +95,7 @@ class CommonController extends Controller
 
 
         $offset = $limit * max($page - 1, 0);
-        $data = $r->all($offset, $sortList, $filterList, $relationsList, $limit);
+        $data = $r->all($offset, $sortList, $filterList, $relationsList, $limit, $select);
 
         $result = [
             'list'       =>  $data['list'],

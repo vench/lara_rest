@@ -88,8 +88,9 @@ class CommonRepository implements Repository
      * @param int $limit
      * @return array [ list: [], total: int ]
      */
-    public function all($offset = 0, array $orders = null, array $filters = null, array $relations = null, $limit = self::DEFAULT_LIMIT)
+    public function all($offset = 0, array $orders = null, array $filters = null, array $relations = null, $limit = self::DEFAULT_LIMIT, $select = '*')
     {
+        $this->applySelect($select);
         $this->applyFilter($filters);
         $this->applyFilterOwner();
         $total = $this->queryBuilder->count();
@@ -191,6 +192,9 @@ class CommonRepository implements Repository
     }
 
 
+
+
+
     /**
      * @param array $dataFields
      * @param array $messages
@@ -231,6 +235,7 @@ class CommonRepository implements Repository
 
         return $rules;
     }
+
 
 
     /**

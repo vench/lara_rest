@@ -22,6 +22,11 @@ trait TraitRepositoryFilter
 
 
     /**
+     * @var array
+     */
+    protected $aggregate = [];
+
+    /**
      * @param array|null $filters
      */
     protected function applyFilter(array $filters = null) {
@@ -93,8 +98,42 @@ trait TraitRepositoryFilter
         if(!empty($orders)) {
             foreach ($orders as $order) {
                 list($column, $direction ) = $order;
-                $this->queryBuilder->orderBy($column, $direction);
+                $this->queryBuilder->orderBy(
+                    isset($this->aggregate[$column]) ? $this->aggregate[$column] : $column,
+                    $direction);
             }
+        }
+    }
+
+
+    /**
+     * @param $select
+     */
+    protected function applySelect($select ) {
+
+        if(empty($select) || $select == '*') {
+            return;
+        }
+        $selectList = explode(',',$select);
+
+        $pure = [];
+        $aggregate = [];
+
+        foreach ($selectList as $field) {
+            $components = explode(':', $field);
+            if(count($components) == 2) {
+                $func =  $components[1];
+                $alias = join('', array_map('ucwords', $components));
+                $this->aggregate[$alias] = raw("{$func}(`{$components[0]}`)");
+                $aggregate[] = raw("{$func}(`{$components[0]}`) as {$alias}");
+            } else {
+                $pure[] = $components[0];
+            }
+        }
+
+        $this->queryBuilder->select(array_merge($aggregate,  $pure));
+        if(!empty($this->aggregate) && !empty($pure)) {
+            $this->queryBuilder->groupBy($pure);
         }
     }
 }

@@ -16,12 +16,15 @@ interface Repository
     const DEFAULT_LIMIT = 25;
 
     /**
-     * @param $offset
+     * @param int $offset
+     * @param array|null $orders
+     * @param array|null $filters
      * @param array|null $relations
      * @param int $limit
+     * @param string $select
      * @return array [ list: [], total: int ]
      */
-    public function all($offset = 0, array $orders = null, array $filters = null, array $relations = null, $limit = self::DEFAULT_LIMIT);
+    public function all($offset = 0, array $orders = null, array $filters = null, array $relations = null, $limit = self::DEFAULT_LIMIT, $select = '*');
 
     /**
      * @param int $id
