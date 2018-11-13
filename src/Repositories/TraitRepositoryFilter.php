@@ -8,6 +8,8 @@
 
 namespace LpRest\Repositories;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Trait TraitRepositoryFilter
  * @package LpRest\Repositories
@@ -124,8 +126,8 @@ trait TraitRepositoryFilter
             if(count($components) == 2) {
                 $func =  $components[1];
                 $alias = join('', array_map('ucwords', $components));
-                $this->aggregate[$alias] = raw("{$func}(`{$components[0]}`)");
-                $aggregate[] = raw("{$func}(`{$components[0]}`) as {$alias}");
+                $this->aggregate[$alias] = DB::raw("{$func}(`{$components[0]}`)");
+                $aggregate[] = DB::raw("{$func}(`{$components[0]}`) as {$alias}");
             } else {
                 $pure[] = $components[0];
             }
