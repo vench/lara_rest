@@ -117,7 +117,7 @@ class RestServiceProviderLaravel extends ServiceProvider
     /**
      *
      */
-    private function handleMigrations() {
+    protected function handleMigrations() {
         $this->loadMigrationsFrom([
             __DIR__ . '/migrations',
         ]);
