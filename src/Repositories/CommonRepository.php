@@ -185,9 +185,14 @@ class CommonRepository implements Repository
      */
     protected function applyFilterOwner() {
         if(!is_null($field = $this->accessPermissionOwnedField)) {
-            $this->applyFilter([
-                [$field, Auth::id()],
-            ]);
+
+            if(is_string($field)){
+                $this->applyFilter([
+                    [$field, Auth::id()],
+                ]);
+            } else if(is_array($field)) {
+                $this->applyFilter($field);
+            }
         }
     }
 
