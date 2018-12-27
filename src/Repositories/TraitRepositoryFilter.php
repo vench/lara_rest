@@ -32,7 +32,7 @@ trait TraitRepositoryFilter
      * @param array|null $filters
      * @param null $queryBuilder
      */
-    protected function applyFilter(array $filters = null, $queryBuilder) {
+    protected function applyFilter(array $filters = null, $queryBuilder = null) {
         if(!empty($filters)) {
 
             foreach ($filters as $filter) {
