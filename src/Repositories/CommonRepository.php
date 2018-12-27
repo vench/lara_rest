@@ -94,10 +94,7 @@ class CommonRepository implements Repository
 
         if($this->applyFilterOwner()) {
             $this->queryBuilder->where(function($subQuery) use (&$filters){
-                $baseQuery = $this->queryBuilder;
-                $this->queryBuilder = $subQuery;
-                $this->applyFilter($filters);
-                $this->queryBuilder = $baseQuery;
+                $this->applyFilter($filters, $subQuery);
             });
 
         } else {

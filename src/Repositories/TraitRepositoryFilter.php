@@ -30,8 +30,9 @@ trait TraitRepositoryFilter
 
     /**
      * @param array|null $filters
+     * @param null $queryBuilder
      */
-    protected function applyFilter(array $filters = null) {
+    protected function applyFilter(array $filters = null, $queryBuilder) {
         if(!empty($filters)) {
 
             foreach ($filters as $filter) {
@@ -47,7 +48,7 @@ trait TraitRepositoryFilter
                     if(!in_array($boolean, ['and', 'or'])) {
                         $boolean = 'and';
                     }
-                    $this->addWhereCondition($column, $value, $operator, $boolean);
+                    $this->addWhereCondition($column, $value, $operator, $boolean, $queryBuilder);
                 }
             }
         }
