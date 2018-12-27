@@ -91,8 +91,19 @@ class CommonRepository implements Repository
     public function all($offset = 0, array $orders = null, array $filters = null, array $relations = null, $limit = self::DEFAULT_LIMIT, $select = '*')
     {
         $this->applySelect($select);
-        $this->applyFilter($filters);
-        $this->applyFilterOwner();
+
+        if($this->applyFilterOwner()) {
+            $this->queryBuilder->where(function($subQuery) use (&$filters){
+                $baseQuery = $this->queryBuilder;
+                $this->queryBuilder = $subQuery;
+                $this->applyFilter($filters);
+                $this->queryBuilder = $baseQuery;
+            });
+
+        } else {
+            $this->applyFilter($filters);
+        }
+
         $total = $this->queryBuilder->count();
 
         $this->applyRelations($relations);
@@ -181,7 +192,7 @@ class CommonRepository implements Repository
 
 
     /**
-     *
+     * @return bool
      */
     protected function applyFilterOwner() {
         if(!is_null($field = $this->accessPermissionOwnedField)) {
@@ -190,10 +201,14 @@ class CommonRepository implements Repository
                 $this->applyFilter([
                     [$field, Auth::id()],
                 ]);
+                return true;
             } else if(is_array($field)) {
                 $this->applyFilter($field);
+                return true;
             }
         }
+
+        return false;
     }
 
 
